@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>WNC Plant Flashcards</title>
+  <link rel="stylesheet" href="/static/app.css?v=callmatch1">
+</head>
+<body>
+  <div class="bg"></div>
+  <header class="top">
+    <div>
+      <p class="eyebrow" id="eyebrow">Western North Carolina</p>
+      <h1 id="deck-title">Plant Flashcards</h1>
+    </div>
+    <label class="learn-topic subject-pick">Deck
+      <select id="subject" aria-label="Plants or birds">
+        <option value="plants">Plants</option>
+        <option value="birds">Birds</option>
+      </select>
+    </label>
+    <p class="count" id="deck-count"><strong>{{ plant_count }}</strong> plants in {{ group_count }} groups of {{ group_size }} · start with the most common five</p>
+  </header>
+
+  <nav class="tabs" role="tablist">
+    <button class="tab on" data-mode="study">Study</button>
+    <button class="tab" data-mode="quiz">Quiz</button>
+    <button class="tab" data-mode="browse">Browse</button>
+    <button class="tab" data-mode="path">Groups</button>
+  </nav>
+
+  <section class="filters">
+    <label>Type
+      <select id="category">
+        <option value="all">All types</option>
+        <option value="tree">Trees</option>
+        <option value="shrub">Shrubs</option>
+        <option value="vine">Vines</option>
+        <option value="wildflower">Wildflowers</option>
+        <option value="fern">Ferns</option>
+        <option value="grass">Grasses</option>
+      </select>
+    </label>
+    <label>Origin
+      <select id="origin">
+        <option value="all">Native + invasive</option>
+        <option value="native">Native / indigenous</option>
+        <option value="invasive">Invasive</option>
+      </select>
+    </label>
+    <label class="grow">Search
+      <input id="search" type="search" placeholder="Name, family, habitat…">
+    </label>
+  </section>
+
+  <main>
+    <section class="path-bar">
+      <label class="learn-topic">Learning
+        <select id="topic" aria-label="What you are learning">
+          <option value="name">Name from the picture</option>
+          <option value="uses" id="topic-uses">Uses</option>
+          <option value="lookalikes">Look-alikes</option>
+          <option value="identify">How to identify it</option>
+        </select>
+      </label>
+      <p id="path-status">Loading path…</p>
+      <div class="path-actions">
+        <button id="add-five" class="primary">Add next 5</button>
+        <button id="reset-path" class="ghost">Back to first 5</button>
+      </div>
+    </section>
+
+    <section id="study-view" class="panel on">
+      <div class="toolbar">
+        <span id="study-meta">Loading…</span>
+        <label class="scope">
+          <select id="scope">
+            <option value="unlocked">All unlocked plants</option>
+          </select>
+        </label>
+        <button id="shuffle" class="ghost">Shuffle</button>
+      </div>
+      <article class="card" id="card">
+        <div class="photo-wrap" id="card-photo">
+          <div class="photo-scroller" id="card-scroller" tabindex="0"></div>
+          <button type="button" class="photo-nav prev" id="card-prev" aria-label="Previous picture" hidden>‹</button>
+          <button type="button" class="photo-nav next" id="card-next" aria-label="Next picture" hidden>›</button>
+          <p class="photo-label" id="card-photo-label" hidden></p>
+          <div class="photo-dots" id="card-dots"></div>
+          <div class="badges">
+            <span id="badge-origin" class="badge"></span>
+            <span id="badge-cat" class="badge dim"></span>
+            <span id="badge-group" class="badge dim"></span>
+          </div>
+          <p class="hint" id="front-hint">What plant is this?</p>
+          <button type="button" class="call-btn" id="card-call" hidden>Play call</button>
+        </div>
+        <div class="back" id="card-back" hidden>
+          <h2 id="common"></h2>
+          <p class="sci" id="scientific"></p>
+          <p class="aka" id="aka"></p>
+          <dl>
+            <div><dt>How to know it</dt><dd id="id-tips"></dd></div>
+            <div><dt id="label-wnc">Where in WNC</dt><dd id="wnc"></dd></div>
+            <div><dt>Habitat</dt><dd id="habitat"></dd></div>
+            <div><dt id="label-uses">Uses</dt><dd id="uses"></dd></div>
+            <div><dt>Caution</dt><dd id="caution"></dd></div>
+            <div><dt>Lookalikes</dt><dd id="lookalikes"></dd></div>
+          </dl>
+          <p class="credit" id="credit"></p>
+          <p class="credit" id="call-credit" hidden></p>
+        </div>
+      </article>
+      <div class="actions">
+        <button id="flip" class="primary">Show name &amp; uses</button>
+        <button id="learning" class="warn" hidden>Still learning</button>
+        <button id="know" class="ok" hidden>I knew it</button>
+        <button id="next" class="ghost" hidden>Next</button>
+      </div>
+    </section>
+
+    <section id="quiz-view" class="panel">
+      <div class="toolbar">
+        <span id="quiz-score">Score 0 / 0</span>
+        <span class="quiz-keys">1–4 to answer, Enter for the next</span>
+        <button id="quiz-next" class="ghost" type="button">New question</button>
+      </div>
+      <article class="card quiz-card">
+        <div class="photo-wrap" id="quiz-photo">
+          <div class="photo-scroller" id="quiz-scroller" tabindex="0"></div>
+          <button type="button" class="photo-nav prev" id="quiz-prev" aria-label="Previous picture" hidden>‹</button>
+          <button type="button" class="photo-nav next" id="quiz-next-photo" aria-label="Next picture" hidden>›</button>
+          <p class="photo-label" id="quiz-photo-label" hidden></p>
+          <div class="photo-dots" id="quiz-dots"></div>
+          <button type="button" class="call-btn" id="quiz-call" hidden>Play call</button>
+        </div>
+        <p class="call-credit" id="quiz-call-credit" hidden></p>
+        <p class="quiz-ask" id="quiz-ask"></p>
+        <div class="choices" id="choices"></div>
+        <p class="quiz-feedback" id="quiz-feedback"></p>
+      </article>
+    </section>
+
+    <section id="browse-view" class="panel">
+      <div class="grid" id="grid"></div>
+    </section>
+
+    <section id="path-view" class="panel">
+      <p class="path-intro">Each topic keeps its own groups. Name from the picture can be on group 7 while Uses is still on the first five.</p>
+      <div id="group-list" class="group-list"></div>
+    </section>
+  </main>
+
+  <footer>
+    <p id="footer-main">Photos from Wikipedia / Wikimedia Commons, saved on this computer. On a card with several pictures, swipe or use the arrows for leaves, bark, and branches. Plant facts checked against NC Cooperative Extension, NC Native Plant Society, NC Forest Service, and NC Invasive Plant Council lists.</p>
+    <p class="fine" id="footer-fine">Western NC has 2,000+ vascular plants. This deck is the common, useful, iconic, and invasive species you are most likely to need. Traditional uses are historical — not medical or foraging advice. Never eat a plant unless you are certain of the ID and the part that is actually edible.</p>
+  </footer>
+
+  <dialog id="detail">
+    <button class="close" id="close-detail">Close</button>
+    <div id="detail-body"></div>
+  </dialog>
+
+  <script src="/static/app.js?v=callmatch1"></script>
+</body>
+</html>
