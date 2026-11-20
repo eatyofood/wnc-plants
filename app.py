@@ -323,12 +323,67 @@ def normalize_bird_box(raw) -> tuple[dict, bool]:
     }, changed
 
 
+QUIZ_LOG_LIMIT = 4000
+
+
+def clean_quiz_log(raw) -> tuple[list, bool]:
+    """Keep quiz history without touching plant or bird mastery."""
+    if not isinstance(raw, dict) or "quiz_log" not in raw:
+        return [], False
+    log = raw.get("quiz_log")
+    if not isinstance(log, list):
+        return [], True
+    allowed = {
+        "plants": {key for key, _label in TOPICS},
+        "birds": {key for key, _label in BIRD_TOPICS},
+    }
+    clean = []
+    changed = False
+    for item in log:
+        if not isinstance(item, dict):
+            changed = True
+            continue
+        subject = item.get("subject")
+        topic = item.get("topic")
+        pid = item.get("id")
+        correct = item.get("correct")
+        when = item.get("t")
+        if (
+            subject not in allowed
+            or topic not in allowed[subject]
+            or not isinstance(pid, str)
+            or not pid
+            or not isinstance(correct, bool)
+            or not isinstance(when, str)
+            or not when
+        ):
+            changed = True
+            continue
+        clean.append(
+            {
+                "t": when,
+                "subject": subject,
+                "topic": topic,
+                "id": pid,
+                "correct": correct,
+            }
+        )
+    if len(clean) > QUIZ_LOG_LIMIT:
+        clean = clean[-QUIZ_LOG_LIMIT:]
+        changed = True
+    if len(clean) != len(log):
+        changed = True
+    return clean, changed
+
+
 def normalize_state(raw) -> tuple[dict, bool]:
     plants, plant_changed = normalize_plant_state(raw)
     birds_raw = raw.get("birds") if isinstance(raw, dict) else None
     birds, bird_changed = normalize_bird_box(birds_raw)
     plants["birds"] = birds
-    return plants, plant_changed or bird_changed
+    quiz_log, log_changed = clean_quiz_log(raw if isinstance(raw, dict) else None)
+    plants["quiz_log"] = quiz_log
+    return plants, plant_changed or bird_changed or log_changed
 
 
 def load_state() -> dict:
@@ -661,6 +716,149 @@ def api_progress_post():
     store[pid] = rec
     save_state(state)
     return jsonify(rec)
+
+
+@app.route("/api/quiz-log", methods=["POST"])
+def api_quiz_log():
+    body = request.get_json(force=True, silent=True) or {}
+    deck = current_deck(body)
+    topic = request_topic(body)
+    pid = body.get("id")
+    correct = body.get("correct")
+    if pid not in deck.by_id or not isinstance(correct, bool):
+        return jsonify({"error": "bad request"}), 400
+    state = load_state()
+    log = state.get("quiz_log")
+    if not isinstance(log, list):
+        log = []
+    log.append(
+        {
+            "t": datetime.now(timezone.utc).isoformat(),
+            "subject": deck.key,
+            "topic": topic,
+            "id": pid,
+            "correct": correct,
+        }
+    )
+    if len(log) > QUIZ_LOG_LIMIT:
+        log = log[-QUIZ_LOG_LIMIT:]
+    state["quiz_log"] = log
+    save_state(state)
+    return jsonify({"ok": True, "attempts": len(log)})
+
+
+def _card_name(subject: str, pid: str) -> str:
+    deck = DECKS.get(subject)
+    card = deck.by_id.get(pid) if deck else None
+    if not card:
+        return pid
+    return card.get("common_name") or pid
+
+
+def _downsample(points: list[tuple[int, float]], limit: int = 48) -> list[dict]:
+    if len(points) <= limit:
+        chosen = points
+    else:
+        step = (len(points) - 1) / (limit - 1)
+        chosen = []
+        seen = set()
+        for index in range(limit):
+            item = points[round(index * step)]
+            if item[0] in seen:
+                continue
+            seen.add(item[0])
+            chosen.append(item)
+    return [{"n": n, "accuracy": round(accuracy, 4)} for n, accuracy in chosen]
+
+
+def quiz_stats(state: dict) -> dict:
+    log = state.get("quiz_log")
+    if not isinstance(log, list):
+        log = []
+    labels = {"plants": dict(TOPICS), "birds": dict(BIRD_TOPICS)}
+    topics = {
+        subject: {
+            key: {"label": label, "attempts": 0, "correct": 0}
+            for key, label in pairs.items()
+        }
+        for subject, pairs in labels.items()
+    }
+    running_correct = 0
+    running = []
+    daily: dict[str, dict] = {}
+    species: dict[tuple[str, str], dict] = {}
+    for item in log:
+        subject = item["subject"]
+        topic = item["topic"]
+        correct = bool(item["correct"])
+        bucket = topics[subject][topic]
+        bucket["attempts"] += 1
+        bucket["correct"] += int(correct)
+        running_correct += int(correct)
+        running.append((len(running) + 1, running_correct / (len(running) + 1)))
+        day = str(item.get("t") or "")[:10]
+        day_bucket = daily.setdefault(day, {"day": day, "attempts": 0, "correct": 0})
+        day_bucket["attempts"] += 1
+        day_bucket["correct"] += int(correct)
+        key = (subject, item["id"])
+        spec = species.setdefault(
+            key,
+            {
+                "subject": subject,
+                "id": item["id"],
+                "common_name": _card_name(subject, item["id"]),
+                "attempts": 0,
+                "correct": 0,
+            },
+        )
+        spec["attempts"] += 1
+        spec["correct"] += int(correct)
+    attempts = len(log)
+    correct_n = sum(1 for item in log if item["correct"])
+    weak = [row for row in species.values() if row["attempts"] >= 2]
+    weak.sort(key=lambda row: (row["correct"] / row["attempts"], -row["attempts"]))
+    recent = []
+    for item in reversed(log[-8:]):
+        recent.append(
+            {
+                "t": item["t"],
+                "subject": item["subject"],
+                "topic": item["topic"],
+                "topic_label": labels[item["subject"]].get(item["topic"], item["topic"]),
+                "id": item["id"],
+                "common_name": _card_name(item["subject"], item["id"]),
+                "correct": item["correct"],
+            }
+        )
+    mastery = {}
+    for deck in (PLANT_DECK, BIRD_DECK):
+        store = record_store(state, deck)
+        mastery[deck.key] = {}
+        for key, label in deck.topic_labels:
+            known = 0
+            for pid in deck.order:
+                if known_for(store.get(pid) or {}, key) > 0:
+                    known += 1
+            mastery[deck.key][key] = {
+                "label": label,
+                "known": known,
+                "total": len(deck.order),
+            }
+    return {
+        "attempts": attempts,
+        "correct": correct_n,
+        "running": _downsample(running),
+        "daily": [daily[day] for day in sorted(daily)],
+        "topics": topics,
+        "mastery": mastery,
+        "weak": weak[:6],
+        "recent": recent,
+    }
+
+
+@app.route("/api/quiz-stats")
+def api_quiz_stats():
+    return jsonify(quiz_stats(load_state()))
 
 
 def known_for(rec: dict, topic: str) -> int:

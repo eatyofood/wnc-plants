@@ -637,14 +637,17 @@ function setMode(mode) {
   document.querySelectorAll(".tab").forEach((t) => {
     t.classList.toggle("on", t.dataset.mode === mode);
   });
+  document.body.dataset.mode = mode;
   $("study-view").classList.toggle("on", mode === "study");
   $("quiz-view").classList.toggle("on", mode === "quiz");
   $("browse-view").classList.toggle("on", mode === "browse");
   $("path-view").classList.toggle("on", mode === "path");
+  $("stats-view").classList.toggle("on", mode === "stats");
   if (mode === "study") showCard();
   if (mode === "browse") renderBrowse();
   if (mode === "quiz") loadQuiz();
   if (mode === "path") renderGroups();
+  if (mode === "stats") loadStats();
 }
 
 function renderBrowse() {
@@ -818,6 +821,7 @@ function answerQuiz(id, btn) {
     ? `Yes — ${state.quiz.answer.common_name}. ${detail}`
     : `It's ${state.quiz.answer.common_name} (${state.quiz.answer.scientific_name}). ${detail}`;
   $("quiz-score").textContent = quizScoreLine();
+  recordQuizAnswer(scoreSubject, state.quiz.topic || state.topic, state.quiz.answer.id, correct);
   setCallCredit($("quiz-call-credit"), state.quiz);
   if (state.quiz.topic === "call") {
     state.galleries.quiz = mountGallery({
@@ -832,6 +836,138 @@ function answerQuiz(id, btn) {
     });
     syncHearCall(true);
   }
+}
+
+function recordQuizAnswer(subject, topic, id, correct) {
+  fetch("/api/quiz-log", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ subject, topic, id, correct }),
+  }).catch(() => {});
+}
+
+function pct(correct, attempts) {
+  if (!attempts) return null;
+  return Math.round((100 * correct) / attempts);
+}
+
+function pctLabel(correct, attempts) {
+  const value = pct(correct, attempts);
+  return value === null ? "—" : `${value}%`;
+}
+
+function barRows(entries, valueOf, totalOf) {
+  return entries.map((entry) => {
+    const attempts = totalOf(entry);
+    const value = valueOf(entry);
+    const shown = attempts ? Math.round((100 * value) / attempts) : 0;
+    const low = attempts && shown < 60;
+    return `<div class="bar-row">
+      <span>${escapeHtml(entry.label || entry.common_name)}</span>
+      <span class="bar-track"><span class="bar-fill${low ? " low" : ""}" style="width:${shown}%"></span></span>
+      <span>${attempts ? `${shown}%` : "—"}</span>
+    </div>`;
+  }).join("");
+}
+
+function accuracyLine(series) {
+  if (!series.length) {
+    return `<p class="chart-empty">Answer a quiz question and this line will start.</p>`;
+  }
+  const w = 640;
+  const h = 200;
+  const pad = 28;
+  const coords = series.map((point, index) => {
+    const x = series.length === 1
+      ? w / 2
+      : pad + (index / (series.length - 1)) * (w - pad * 2);
+    const y = pad + (1 - point.accuracy) * (h - pad * 2);
+    return [x, y];
+  });
+  const line = coords.map((pair) => pair.join(",")).join(" ");
+  const grids = [0, 0.5, 1].map((mark) => {
+    const y = pad + (1 - mark) * (h - pad * 2);
+    return `<line x1="${pad}" y1="${y}" x2="${w - pad}" y2="${y}" stroke="#574727" stroke-width="1"></line>
+      <text x="4" y="${y + 4}" fill="#8B9A90" font-size="12" font-family="system-ui, sans-serif">${Math.round(mark * 100)}</text>`;
+  }).join("");
+  const dots = coords.map((pair) => `<circle cx="${pair[0]}" cy="${pair[1]}" r="3.5" fill="#E8E4DC"></circle>`).join("");
+  return `<svg class="chart-line" viewBox="0 0 ${w} ${h}" role="img" aria-label="Quiz accuracy over time">
+    ${grids}
+    <polyline points="${line}" fill="none" stroke="#E8E4DC" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"></polyline>
+    ${dots}
+  </svg>`;
+}
+
+function topicBlock(title, topics) {
+  const entries = Object.values(topics || {});
+  return `<article class="chart-card">
+    <h2>${escapeHtml(title)}</h2>
+    <p>Share of quiz answers that were right.</p>
+    ${barRows(entries, (entry) => entry.correct, (entry) => entry.attempts)}
+  </article>`;
+}
+
+function masteryBlock(title, topics) {
+  const entries = Object.values(topics || {});
+  return `<article class="chart-card">
+    <h2>${escapeHtml(title)}</h2>
+    <p>Cards marked “I knew it,” out of the whole deck.</p>
+    ${barRows(entries, (entry) => entry.known, (entry) => entry.total)}
+  </article>`;
+}
+
+async function loadStats() {
+  const box = $("stats-body");
+  const res = await fetch("/api/quiz-stats");
+  if (!res.ok) {
+    box.innerHTML = `<p class="chart-empty">The progress log could not be loaded.</p>`;
+    return;
+  }
+  const data = await res.json();
+  const accuracy = pctLabel(data.correct, data.attempts);
+  const weak = (data.weak || []).map((row) => {
+    const shown = pct(row.correct, row.attempts);
+    return `<li class="${shown !== null && shown < 60 ? "miss" : "hit"}">
+      ${escapeHtml(row.common_name)}
+      <small>${row.subject === "birds" ? "Bird" : "Plant"} · ${row.correct} of ${row.attempts} right</small>
+    </li>`;
+  }).join("");
+  const recent = (data.recent || []).map((row) => `<li class="${row.correct ? "hit" : "miss"}">
+      ${row.correct ? "Right" : "Wrong"} · ${escapeHtml(row.common_name)}
+      <small>${row.subject === "birds" ? "Bird" : "Plant"} · ${escapeHtml(row.topic_label)}</small>
+    </li>`).join("");
+  box.innerHTML = `<div class="stats-wrap">
+    <div class="stats-nums">
+      <article class="stat-card"><strong>${accuracy}</strong><span>Quiz accuracy</span></article>
+      <article class="stat-card"><strong>${data.correct}</strong><span>Right answers</span></article>
+      <article class="stat-card"><strong>${data.attempts}</strong><span>Questions answered</span></article>
+    </div>
+    <article class="chart-card">
+      <h2>Accuracy as you go</h2>
+      <p>Each point is your running score, from the first saved answer to the latest.</p>
+      ${accuracyLine(data.running || [])}
+    </article>
+    <div class="stats-split">
+      ${topicBlock("Plants by topic", data.topics && data.topics.plants)}
+      ${topicBlock("Birds by topic", data.topics && data.topics.birds)}
+    </div>
+    <div class="stats-split">
+      ${masteryBlock("Plant study", data.mastery && data.mastery.plants)}
+      ${masteryBlock("Bird study", data.mastery && data.mastery.birds)}
+    </div>
+    <div class="stats-split">
+      <article class="chart-card">
+        <h2>Needs another look</h2>
+        <p>Species with at least two answers and the lowest accuracy.</p>
+        ${weak ? `<ul class="recent">${weak}</ul>` : `<p class="chart-empty">Two answers on the same species will show up here.</p>`}
+      </article>
+      <article class="chart-card">
+        <h2>Latest answers</h2>
+        <p>The last few quiz questions on this computer.</p>
+        ${recent ? `<ul class="recent">${recent}</ul>` : `<p class="chart-empty">Nothing saved yet.</p>`}
+      </article>
+    </div>
+  </div>`;
 }
 
 function escapeHtml(s) {

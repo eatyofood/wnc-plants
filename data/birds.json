@@ -122,7 +122,9 @@
         "label": "Photo",
         "credit": "Photo via Wikipedia / Wikimedia Commons (File:Carolina_Chickadee1_by_Dan_Pancamo.jpg). Used for local study."
       }
-    ]
+    ],
+    "audio": "carolina-chickadee.mp3",
+    "audio_credit": "Call saved locally for study."
   },
   {
     "id": "american-robin",
@@ -152,7 +154,9 @@
         "label": "Photo",
         "credit": "Photo via Wikipedia / Wikimedia Commons (File:American_robin_(71307).jpg). Used for local study."
       }
-    ]
+    ],
+    "audio": "american-robin.mp3",
+    "audio_credit": "Call saved locally for study."
   },
   {
     "id": "blue-jay",
@@ -182,7 +186,9 @@
         "label": "Photo",
         "credit": "Photo via Wikipedia / Wikimedia Commons (File:Blue_jay_in_PP_(30960).jpg). Used for local study."
       }
-    ]
+    ],
+    "audio": "blue-jay.mp3",
+    "audio_credit": "Call saved locally for study."
   },
   {
     "id": "northern-mockingbird",
@@ -212,7 +218,9 @@
         "label": "Photo",
         "credit": "Photo via Wikipedia / Wikimedia Commons (File:Mockingbird_in_Bay_Ridge_(85082).jpg). Used for local study."
       }
-    ]
+    ],
+    "audio": "northern-mockingbird.mp3",
+    "audio_credit": "Call saved locally for study."
   },
   {
     "id": "eastern-bluebird",
@@ -242,7 +250,9 @@
         "label": "Photo",
         "credit": "Photo via Wikipedia / Wikimedia Commons (File:Sialia_sialis_-Michigan,_USA_-pair-8c.jpg). Used for local study."
       }
-    ]
+    ],
+    "audio": "eastern-bluebird.mp3",
+    "audio_credit": "Call saved locally for study."
   },
   {
     "id": "mourning-dove",
@@ -272,7 +282,9 @@
         "label": "Photo",
         "credit": "Photo via Wikipedia / Wikimedia Commons (File:Mourning_dove_perched_(61179).jpg). Used for local study."
       }
-    ]
+    ],
+    "audio": "mourning-dove.mp3",
+    "audio_credit": "Call saved locally for study."
   },
   {
     "id": "house-finch",
@@ -300,7 +312,9 @@
         "label": "Photo",
         "credit": "Photo via Wikipedia / Wikimedia Commons (File:House_finch_(33688)2.jpg). Used for local study."
       }
-    ]
+    ],
+    "audio": "house-finch.mp3",
+    "audio_credit": "Call saved locally for study."
   },
   {
     "id": "european-starling",
@@ -330,7 +344,9 @@
         "label": "Photo",
         "credit": "Photo via Wikipedia / Wikimedia Commons (File:Common_starling_(Sturnus_vulgaris)_breeding_male_Marken.jpg). Used for local study."
       }
-    ]
+    ],
+    "audio": "european-starling.mp3",
+    "audio_credit": "Call saved locally for study."
   },
   {
     "id": "house-sparrow",
@@ -360,7 +376,9 @@
         "label": "Photo",
         "credit": "Photo via Wikipedia / Wikimedia Commons (File:House_sparrow_male_in_Prospect_Park_(53532).jpg). Used for local study."
       }
-    ]
+    ],
+    "audio": "house-sparrow.mp3",
+    "audio_credit": "Call saved locally for study."
   },
   {
     "id": "rock-pigeon",
@@ -391,7 +409,9 @@
         "label": "Photo",
         "credit": "Photo via Wikipedia / Wikimedia Commons (File:Columba_livia_(Rock_Dove,_wild),_Duncansby_Head,_Caithness,_Scotland_1.jpg). Used for local study."
       }
-    ]
+    ],
+    "audio": "rock-pigeon.mp3",
+    "audio_credit": "Call saved locally for study."
   },
   {
     "id": "eurasian-collared-dove",
@@ -421,7 +441,9 @@
         "label": "Photo",
         "credit": "Photo via Wikipedia / Wikimedia Commons (File:2022-04-06_Streptopelia_decaocto,_Plovdiv,_Bulgaria_1.jpg). Used for local study."
       }
-    ]
+    ],
+    "audio": "eurasian-collared-dove.mp3",
+    "audio_credit": "Call saved locally for study."
   },
   {
     "id": "american-crow",
@@ -451,7 +473,9 @@
         "label": "Photo",
         "credit": "Photo via Wikipedia / Wikimedia Commons (File:Corvus-brachyrhynchos-001.jpg). Used for local study."
       }
-    ]
+    ],
+    "audio": "american-crow.mp3",
+    "audio_credit": "Call saved locally for study."
   },
   {
     "id": "eastern-towhee",
@@ -482,7 +506,9 @@
         "label": "Photo",
         "credit": "Photo via Wikipedia / Wikimedia Commons (File:20241004_eastern_towhee_pleasant_valley_PD207764.jpg). Used for local study."
       }
-    ]
+    ],
+    "audio": "eastern-towhee.mp3",
+    "audio_credit": "Call saved locally for study."
   },
   {
     "id": "chipping-sparrow",
@@ -510,7 +536,9 @@
         "label": "Photo",
         "credit": "Photo via Wikipedia / Wikimedia Commons (File:Spizella-passerina-015_edit.jpg). Used for local study."
       }
-    ]
+    ],
+    "audio": "chipping-sparrow.mp3",
+    "audio_credit": "Call saved locally for study."
   },
   {
     "id": "song-sparrow",
@@ -538,7 +566,9 @@
         "label": "Photo",
         "credit": "Photo via Wikipedia / Wikimedia Commons (File:Song_sparrow_in_Prospect_Park_(93031).jpg). Used for local study."
       }
-    ]
+    ],
+    "audio": "song-sparrow.mp3",
+    "audio_credit": "Call saved locally for study."
   },
   {
     "id": "american-goldfinch",
@@ -569,7 +599,9 @@
         "label": "Photo",
         "credit": "Photo via Wikipedia / Wikimedia Commons (File:Carduelis_tristis_-Michigan,_USA_-male-8.jpg). Used for local study."
       }
-    ]
+    ],
+    "audio": "american-goldfinch.mp3",
+    "audio_credit": "Call saved locally for study."
   },
   {
     "id": "dark-eyed-junco",
@@ -600,7 +632,9 @@
         "label": "Photo",
         "credit": "Photo via Wikipedia / Wikimedia Commons (File:Junco_hyemalis_hyemalis_CT1_(cropped).jpg). Used for local study."
       }
-    ]
+    ],
+    "audio": "dark-eyed-junco.mp3",
+    "audio_credit": "Call saved locally for study."
   },
   {
     "id": "downy-woodpecker",

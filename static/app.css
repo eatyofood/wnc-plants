@@ -298,9 +298,50 @@ button.close {
   background: #3B2600; color: #F3EFE6; border: 1px solid #574727;
 }
 
+body[data-mode="stats"] .path-bar,
+body[data-mode="stats"] .filters { display: none; }
+.stats-wrap { display: grid; gap: 12px; }
+.stats-nums, .stats-split { display: grid; gap: 12px; }
+.stats-nums { grid-template-columns: repeat(3, 1fr); }
+.stats-split { grid-template-columns: 1fr 1fr; }
+.stat-card, .chart-card {
+  background: #3B2600; color: #F3EFE6; border: 1px solid #574727; border-radius: 16px;
+  padding: 16px 18px;
+}
+.stat-card strong {
+  display: block; font-size: 2rem; line-height: 1.1; color: #EDEDED;
+  font-family: system-ui, sans-serif;
+}
+.stat-card span, .chart-card p, .chart-empty { color: #C4BBA8; }
+.chart-card h2 {
+  margin: 0 0 6px; font-family: system-ui, sans-serif; font-size: 0.78rem;
+  letter-spacing: 0.08em; text-transform: uppercase; color: #C4BBA8; font-weight: 650;
+}
+.chart-card p { margin: 0 0 12px; }
+.chart-line { width: 100%; height: auto; display: block; }
+.bar-row {
+  display: grid; grid-template-columns: minmax(120px, 170px) 1fr 48px;
+  gap: 8px; align-items: center; margin: 8px 0; color: #EDEDED;
+  font-family: system-ui, sans-serif; font-size: 0.88rem;
+}
+.bar-track { background: #181A1B; border-radius: 999px; height: 12px; overflow: hidden; }
+.bar-fill { display: block; height: 100%; background: #7E9B88; }
+.bar-fill.low { background: #B08A84; }
+.recent { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
+.recent li {
+  background: #181A1B; border-radius: 12px; padding: 10px 12px; color: #EDEDED;
+  font-family: system-ui, sans-serif;
+}
+.recent li.hit { border: 1px solid #7E9B88; }
+.recent li.miss { border: 1px solid #B08A84; }
+.recent small { display: block; color: #9A9A94; margin-top: 2px; }
+
 @media (max-width: 700px) {
   .top { flex-direction: column; align-items: start; }
   .learn-topic, .learn-topic select { width: 100%; min-width: 0; }
   .photo-scroller img, .photo-wrap > img { height: 42vh; }
   dialog .photo-scroller img { height: 240px; }
+  .stats-nums, .stats-split { grid-template-columns: 1fr; }
+  .bar-row { grid-template-columns: 1fr 48px; }
+  .bar-row .bar-track { grid-column: 1 / -1; }
 }

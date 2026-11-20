@@ -1,0 +1,107 @@
+Bird calls still needed for the flashcard deck.
+92 of 95 birds do not have a sound file yet.
+
+Already saved in sounds/:
+  Northern Cardinal (Cardinalis cardinalis) — northern-cardinal.mp3
+  Carolina Wren (Thryothorus ludovicianus) — carolina-wren.mp3
+  Tufted Titmouse (Baeolophus bicolor) — tufted-titmouse.mp3
+
+The app plays sounds/<id>.mp3. The id is the second field on each line.
+Deck order, most familiar birds first.
+
+Save one clip with:
+  ./extract-audio.sh --mp3 -o sounds/<id>.mp3 'https://...'
+
+number	id	common name	scientific name
+1	carolina-chickadee	Carolina Chickadee	Poecile carolinensis
+2	american-robin	American Robin	Turdus migratorius
+3	blue-jay	Blue Jay	Cyanocitta cristata
+4	northern-mockingbird	Northern Mockingbird	Mimus polyglottos
+5	eastern-bluebird	Eastern Bluebird	Sialia sialis
+6	mourning-dove	Mourning Dove	Zenaida macroura
+7	house-finch	House Finch	Haemorhous mexicanus
+8	european-starling	European Starling	Sturnus vulgaris
+9	house-sparrow	House Sparrow	Passer domesticus
+10	rock-pigeon	Rock Pigeon	Columba livia
+11	eurasian-collared-dove	Eurasian Collared-Dove	Streptopelia decaocto
+12	american-crow	American Crow	Corvus brachyrhynchos
+13	eastern-towhee	Eastern Towhee	Pipilo erythrophthalmus
+14	chipping-sparrow	Chipping Sparrow	Spizella passerina
+15	song-sparrow	Song Sparrow	Melospiza melodia
+16	american-goldfinch	American Goldfinch	Spinus tristis
+17	dark-eyed-junco	Dark-eyed Junco	Junco hyemalis
+18	downy-woodpecker	Downy Woodpecker	Dryobates pubescens
+19	red-bellied-woodpecker	Red-bellied Woodpecker	Melanerpes carolinus
+20	hairy-woodpecker	Hairy Woodpecker	Dryobates villosus
+21	northern-flicker	Northern Flicker	Colaptes auratus
+22	pileated-woodpecker	Pileated Woodpecker	Dryocopus pileatus
+23	white-breasted-nuthatch	White-breasted Nuthatch	Sitta carolinensis
+24	brown-headed-nuthatch	Brown-headed Nuthatch	Sitta pusilla
+25	brown-creeper	Brown Creeper	Certhia americana
+26	blue-gray-gnatcatcher	Blue-gray Gnatcatcher	Polioptila caerulea
+27	yellow-bellied-sapsucker	Yellow-bellied Sapsucker	Sphyrapicus varius
+28	red-winged-blackbird	Red-winged Blackbird	Agelaius phoeniceus
+29	brown-headed-cowbird	Brown-headed Cowbird	Molothrus ater
+30	eastern-meadowlark	Eastern Meadowlark	Sturnella magna
+31	common-grackle	Common Grackle	Quiscalus quiscula
+32	killdeer	Killdeer	Charadrius vociferus
+33	turkey-vulture	Turkey Vulture	Cathartes aura
+34	black-vulture	Black Vulture	Coragyps atratus
+35	red-tailed-hawk	Red-tailed Hawk	Buteo jamaicensis
+36	red-shouldered-hawk	Red-shouldered Hawk	Buteo lineatus
+37	coopers-hawk	Cooper's Hawk	Astur cooperii
+38	american-kestrel	American Kestrel	Falco sparverius
+39	osprey	Osprey	Pandion haliaetus
+40	bald-eagle	Bald Eagle	Haliaeetus leucocephalus
+41	barred-owl	Barred Owl	Strix varia
+42	great-horned-owl	Great Horned Owl	Bubo virginianus
+43	ruby-throated-hummingbird	Ruby-throated Hummingbird	Archilochus colubris
+44	chimney-swift	Chimney Swift	Chaetura pelagica
+45	barn-swallow	Barn Swallow	Hirundo rustica
+46	purple-martin	Purple Martin	Progne subis
+47	eastern-phoebe	Eastern Phoebe	Sayornis phoebe
+48	wood-thrush	Wood Thrush	Hylocichla mustelina
+49	scarlet-tanager	Scarlet Tanager	Piranga olivacea
+50	indigo-bunting	Indigo Bunting	Passerina cyanea
+51	red-eyed-vireo	Red-eyed Vireo	Vireo olivaceus
+52	ovenbird	Ovenbird	Seiurus aurocapilla
+53	hooded-warbler	Hooded Warbler	Setophaga citrina
+54	pine-warbler	Pine Warbler	Setophaga pinus
+55	yellow-rumped-warbler	Yellow-rumped Warbler	Setophaga coronata
+56	black-and-white-warbler	Black-and-white Warbler	Mniotilta varia
+57	common-yellowthroat	Common Yellowthroat	Geothlypis trichas
+58	gray-catbird	Gray Catbird	Dumetella carolinensis
+59	brown-thrasher	Brown Thrasher	Toxostoma rufum
+60	cedar-waxwing	Cedar Waxwing	Bombycilla cedrorum
+61	eastern-kingbird	Eastern Kingbird	Tyrannus tyrannus
+62	summer-tanager	Summer Tanager	Piranga rubra
+63	canada-goose	Canada Goose	Branta canadensis
+64	mallard	Mallard	Anas platyrhynchos
+65	wood-duck	Wood Duck	Aix sponsa
+66	great-blue-heron	Great Blue Heron	Ardea herodias
+67	belted-kingfisher	Belted Kingfisher	Megaceryle alcyon
+68	green-heron	Green Heron	Butorides virescens
+69	great-egret	Great Egret	Ardea alba
+70	double-crested-cormorant	Double-crested Cormorant	Nannopterum auritum
+71	mute-swan	Mute Swan	Cygnus olor
+72	tundra-swan	Tundra Swan	Cygnus columbianus
+73	wild-turkey	Wild Turkey	Meleagris gallopavo
+74	northern-bobwhite	Northern Bobwhite	Colinus virginianus
+75	eastern-screech-owl	Eastern Screech-Owl	Megascops asio
+76	eastern-whip-poor-will	Eastern Whip-poor-will	Antrostomus vociferus
+77	chuck-wills-widow	Chuck-will's-widow	Antrostomus carolinensis
+78	common-raven	Common Raven	Corvus corax
+79	ruffed-grouse	Ruffed Grouse	Bonasa umbellus
+80	black-throated-blue-warbler	Black-throated Blue Warbler	Setophaga caerulescens
+81	black-throated-green-warbler	Black-throated Green Warbler	Setophaga virens
+82	winter-wren	Winter Wren	Troglodytes hiemalis
+83	brown-pelican	Brown Pelican	Pelecanus occidentalis
+84	laughing-gull	Laughing Gull	Leucophaeus atricilla
+85	ring-billed-gull	Ring-billed Gull	Larus delawarensis
+86	royal-tern	Royal Tern	Thalasseus maximus
+87	willet	Willet	Tringa semipalmata
+88	white-throated-sparrow	White-throated Sparrow	Zonotrichia albicollis
+89	muscovy-duck	Muscovy Duck	Cairina moschata
+90	cattle-egret	Cattle Egret	Bubulcus ibis
+91	red-headed-woodpecker	Red-headed Woodpecker	Melanerpes erythrocephalus
+92	american-redstart	American Redstart	Setophaga ruticilla

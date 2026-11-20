@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>WNC Plant Flashcards</title>
-  <link rel="stylesheet" href="/static/app.css?v=callmatch1">
+  <link rel="stylesheet" href="/static/app.css?v=stats1">
 </head>
 <body>
   <div class="bg"></div>
@@ -27,6 +27,7 @@
     <button class="tab" data-mode="quiz">Quiz</button>
     <button class="tab" data-mode="browse">Browse</button>
     <button class="tab" data-mode="path">Groups</button>
+    <button class="tab" data-mode="stats">Progress</button>
   </nav>
 
   <section class="filters">
@@ -145,6 +146,10 @@
       <div class="grid" id="grid"></div>
     </section>
 
+    <section id="stats-view" class="panel">
+      <div id="stats-body"></div>
+    </section>
+
     <section id="path-view" class="panel">
       <p class="path-intro">Each topic keeps its own groups. Name from the picture can be on group 7 while Uses is still on the first five.</p>
       <div id="group-list" class="group-list"></div>
@@ -161,6 +166,6 @@
     <div id="detail-body"></div>
   </dialog>
 
-  <script src="/static/app.js?v=callmatch1"></script>
+  <script src="/static/app.js?v=stats1"></script>
 </body>
 </html>
